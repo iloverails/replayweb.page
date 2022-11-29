@@ -2,14 +2,14 @@ import React from "react";
 import { DatePicker } from "antd";
 const { RangePicker } = DatePicker;
 
-export const RangepickerComponent = function (props) {
+export function RangepickerComponent({ datesChanged }) {
 
   function onOpenChange(open) {
-    console.log("onOpenChange", open);
+    // console.log("onOpenChange", open);
   }
 
   function onCalendarChange(dates) {
-    console.log("onCalendarChange", dates);
+    datesChanged(dates);
   }
 
   return (
