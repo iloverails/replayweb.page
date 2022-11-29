@@ -23,9 +23,10 @@ const GDRIVE_CLIENT_ID = "160798412227-tko4c82uopud11q105b2lvbogsj77hlg.apps.goo
 const BANNER_TEXT = "'[name].js is part of ReplayWeb.page (https://replayweb.page) Copyright (C) 2020-2021, Webrecorder Software. Licensed under the Affero General Public License v3.'";
 
 const fallback = {
+  extensions: [".js", ".jsx",".css", "scss"],
   "stream": require.resolve("stream-browserify"),
   "querystring": require.resolve("querystring-es3"),
-  "url": require.resolve("url/"),
+  "url": require.resolve("url"),
   "buffer": false,
   "process": false
 };
@@ -168,12 +169,24 @@ const browserConfig = (/*env, argv*/) => {
     module: {
       rules: [
         {
+          test: /\.jsx?$/,
+          exclude: /(node_modules)/,
+          loader: "babel-loader",
+          options:{
+            presets:[ "@babel/preset-react"]
+          }
+        },
+        {
           test:  /\.svg$/,
           use: ["svg-inline-loader"],
         },
         {
           test: /main.scss$/,
           use: ["css-loader", "sass-loader"]
+        },
+        {
+          test: /global.scss$/i,
+          use: ["style-loader", "css-loader", "sass-loader"],
         },
         {
           test: /wombat.js|wombatWorkers.js|index.html$/i,

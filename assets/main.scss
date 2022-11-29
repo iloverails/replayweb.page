@@ -111,6 +111,10 @@ a:focus {
 
 @import "bulma/bulma";
 
+@import "~antd/dist/antd.css";
+@import "~antd/es/button/style/index.css";
+@import "~antd/es/input/style/index.css";
+
 // Add html and body styles to :host for webcomponents
 :host {
   //background-color: $body-background-color;
@@ -131,4 +135,5 @@ a:focus {
 
   box-sizing: border-box;
   overflow: hidden;
+
 }

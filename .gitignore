@@ -13,3 +13,4 @@ dist/
 plugins-*/
 
 ipfs-core.min.js
+.idea

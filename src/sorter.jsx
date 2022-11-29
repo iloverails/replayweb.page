@@ -3,11 +3,15 @@ import { wrapCss } from "./misc";
 
 import fasSortDown from "@fortawesome/fontawesome-free/svgs/solid/sort-down.svg";
 import fasSortUp from "@fortawesome/fontawesome-free/svgs/solid/sort-up.svg";
+import { RangepickerComponent } from "./react-components/Rangepicker.component.jsx";
+import * as ReactDOMClient from "react-dom/client";
 
+import React from "react";
 
 // ===========================================================================
 class Sorter extends LitElement
 {
+
   constructor() {
     super();
     this.sortedData = [];
@@ -45,6 +49,9 @@ class Sorter extends LitElement
         this.sortDesc = sortDesc === "1";
       }
     }
+
+    const root = ReactDOMClient.createRoot(this.shadowRoot.getElementById("rangepicker"));
+    root.render(<RangepickerComponent/>);
   }
 
   updated(changedProperties) {
@@ -63,6 +70,7 @@ class Sorter extends LitElement
     if (keyChanged || descChanged || dataChanged) {
       this.sortData();
     }
+    // console.log()
   }
 
   sortData() {
@@ -118,19 +126,20 @@ class Sorter extends LitElement
 
   render() {
     return html`
-    <div class="select is-small">
-      <select id="sort-select" @change=${(e) => this.sortKey = e.currentTarget.value}>
-      ${this.sortKeys.map((sort) => html`
-        <option value="${sort.key}" ?selected="${sort.key === this.sortKey}">Sort By: ${sort.name}
-        </option>
-      `)}
-      </select>
-    </div>
-    <button @click=${() => this.sortDesc = !this.sortDesc} class="button is-small">
-      <span>Order:</span>
-      <span class="is-sr-only">${this.sortDesc ? "Ascending" : "Descending"}</span>
-      <span class="icon"><fa-icon aria-hidden="true" .svg=${this.sortDesc ? fasSortUp : fasSortDown}></span>
-    </button>`;
+        <div id="rangepicker"></div>
+        <div class="select is-small">
+            <select id="sort-select" @change=${(e) => this.sortKey = e.currentTarget.value}>
+                ${this.sortKeys.map((sort) => html`
+                    <option value="${sort.key}" ?selected="${sort.key === this.sortKey}">Sort By: ${sort.name}
+                    </option>
+                `)}
+            </select>
+        </div>
+        <button @click=${() => this.sortDesc = !this.sortDesc} class="button is-small">
+            <span>Order:</span>
+            <span class="is-sr-only">${this.sortDesc ? "Ascending" : "Descending"}</span>
+            <span class="icon"><fa-icon aria-hidden="true" .svg=${this.sortDesc ? fasSortUp : fasSortDown}></span>
+        </button>`;
   }
 }
 

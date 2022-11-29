@@ -1,3 +1,5 @@
+import "../assets/global.scss";
+
 import { ReplayWebApp } from "./appmain";
 import { Chooser } from "./chooser";
 import { CollIndex, CollInfo } from "./coll-index";
@@ -8,7 +10,7 @@ import { Loader } from "./loader";
 import { Pages } from "./pages";
 import { PageEntry } from "./pageentry";
 import { Replay } from "./replay";
-import { Sorter } from "./sorter";
+import { Sorter } from "./sorter.jsx";
 import { URLResources } from "./url-resources";
 import { Embed } from "./embed";
 
