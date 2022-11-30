@@ -92,9 +92,9 @@ class CollIndex extends LitElement
 
     for (const coll of this.colls) {
       if (coll.sourceUrl.indexOf(this.query) >= 0 ||
-          coll.filename.indexOf(this.query) >= 0 ||
-          (coll.loadUrl && coll.loadUrl.indexOf(this.query) >= 0) ||
-          (coll.title && coll.title.indexOf(this.query) >= 0)) {
+        coll.filename.indexOf(this.query) >= 0 ||
+        (coll.loadUrl && coll.loadUrl.indexOf(this.query) >= 0) ||
+        (coll.title && coll.title.indexOf(this.query) >= 0)) {
         this.filteredColls.push(coll);
       }
     }
@@ -264,57 +264,57 @@ class CollIndex extends LitElement
     const hasHeader = this.childElementCount > 0;
 
     return html`
-    <header class="${this.hideHeader ? "closed" : ""}">
-      <slot name="header"></slot>
-    </header>
-    <section class="section no-top-padding">
-      <div class="sort-header is-small">
-        ${hasHeader ? html`
-        <button @click=${() => this.hideHeader = !this.hideHeader} class="collapse button is-small">
-          <span class="icon"><fa-icon .svg=${this.hideHeader ? fasArrowDown : fasArrowUp}></span>
-          <span>${this.hideHeader ? "Show " : "Hide"} <span class="is-sr-only">Header</span></span>
-        </button>` : ""}
-      </div>
-      <div class="panel">
-        ${this.renderHeader()}
-        ${this.colls.length ? html`
-        <div class="panel-block sort-header is-small">
-        ${this.renderSearchHeader()}
-          <div class="control has-icons-left has-addons">
-            <input type="text" class="input is-small" @input="${(e) => this.query = e.currentTarget.value}" .value="${this.query}" type="text"
-            placeholder="Search by Archive Title or Source">
-            <span class="icon is-left is-small"><fa-icon .svg="${fasSearch}"/></span>
-          </div>
-          <wr-sorter id="index"
-          sortKey="ctime"
-          ?sortDesc="${true}"
-          .sortKeys="${this.sortKeys}"
-          .data="${this.filteredColls}"
-          @sort-changed="${(e) => this.sortedColls = e.detail.sortedData}">
-          </wr-sorter>
-        </div>
-
-        <div class="coll-list">
-          ${this.sortedColls && this.sortedColls.map((coll, i) => html`
-            <div class="coll-block panel-block">
-              ${this.renderCollInfo(coll)}
-              ${!this._deleting[coll.sourceUrl] ? html`
-              <button class="delete delete-button" aria-label="Unload Collection" title="Unload Collection" data-coll-index="${i}" @click="${this.onDeleteColl}"></button>
-              ` : html`
-              <span class="button delete-button is-loading is-static">Deleting</span`}
+        <header class="${this.hideHeader ? "closed" : ""}">
+            <slot name="header"></slot>
+        </header>
+        <section class="section no-top-padding">
+            <div class="sort-header is-small">
+                ${hasHeader ? html`
+                    <button @click=${() => this.hideHeader = !this.hideHeader} class="collapse button is-small">
+                        <span class="icon"><fa-icon .svg=${this.hideHeader ? fasArrowDown : fasArrowUp}></span>
+                        <span>${this.hideHeader ? "Show " : "Hide"} <span class="is-sr-only">Header</span></span>
+                    </button>` : ""}
             </div>
-          `)}
-        </div>
+            <div class="panel">
+                ${this.renderHeader()}
+                ${this.colls.length ? html`
+                    <div class="panel-block sort-header is-small">
+                        ${this.renderSearchHeader()}
+                        <div class="control has-icons-left has-addons">
+                            <input type="text" class="input is-small" @input="${(e) => this.query = e.currentTarget.value}" .value="${this.query}" type="text"
+                                   placeholder="Search by Archive Title or Source">
+                            <span class="icon is-left is-small"><fa-icon .svg="${fasSearch}"/></span>
+                        </div>
+                        <wr-sorter id="index"
+                                   sortKey="ctime"
+                                   ?sortDesc="${true}"
+                                   .sortKeys="${this.sortKeys}"
+                                   .data="${this.filteredColls}"
+                                   ?showRangePicker="${false}"
+                                   @sort-changed="${(e) => this.sortedColls = e.detail.sortedData}">
+                        </wr-sorter>
+                    </div>
 
-        ` : html`
+                    <div class="coll-list">
+                        ${this.sortedColls && this.sortedColls.map((coll, i) => html`
+                            <div class="coll-block panel-block">
+                                ${this.renderCollInfo(coll)}
+                                ${!this._deleting[coll.sourceUrl] ? html`
+                                    <button class="delete delete-button" aria-label="Unload Collection" title="Unload Collection" data-coll-index="${i}" @click="${this.onDeleteColl}"></button>
+                                ` : html`
+                                    <span class="button delete-button is-loading is-static">Deleting</span`}
+                            </div>
+                        `)}
+                    </div>
 
-        <div class="panel-block extra-padding">
-        ${this.sortedColls === null ? html`<i>Loading Archives...</i>` : 
-    this.renderEmpty()}
-        </div>
-        `}
-      </div>
-    </section>
+                ` : html`
+
+                    <div class="panel-block extra-padding">
+                        ${this.sortedColls === null ? html`<i>Loading Archives...</i>` : this.renderEmpty()}
+                    </div>
+                `}
+            </div>
+        </section>
     `;
   }
 
@@ -406,34 +406,34 @@ class CollInfo extends LitElement
 
   renderSource(coll) {
     return html`
-  <div class="column is-4">
+        <div class="column is-4">
     <span class="source-text"><p class="minihead">Source</p>
     ${coll.sourceUrl && (coll.sourceUrl.startsWith("http://") || coll.sourceUrl.startsWith("https://")) ? html`
-    <a href="${coll.sourceUrl}">${coll.sourceUrl}&nbsp;</a>` : html`
-    ${coll.sourceUrl}&nbsp;`}
+        <a href="${coll.sourceUrl}">${coll.sourceUrl}&nbsp;</a>` : html`
+        ${coll.sourceUrl}&nbsp;`}
     </span>
 
-    <a @click="${(e) => this.onCopy(e, coll.sourceUrl)}" class="copy"><fa-icon .svg="${fasCopy}"/></a>
-    ${coll.sourceUrl && coll.sourceUrl.startsWith("googledrive://") ? html`
-      <p><i>(${coll.filename})</i></p>` : ""}
-  </div>
-  <div class="column is-2"><p class="minihead">Date Loaded</p>${coll.ctime ? new Date(coll.ctime).toLocaleString() : ""}</div>
-  <div class="column is-2"><p class="minihead">Total Size</p>${prettyBytes(Number(coll.size || 0))}</div>
-  `;
+            <a @click="${(e) => this.onCopy(e, coll.sourceUrl)}" class="copy"><fa-icon .svg="${fasCopy}"/></a>
+            ${coll.sourceUrl && coll.sourceUrl.startsWith("googledrive://") ? html`
+                <p><i>(${coll.filename})</i></p>` : ""}
+        </div>
+        <div class="column is-2"><p class="minihead">Date Loaded</p>${coll.ctime ? new Date(coll.ctime).toLocaleString() : ""}</div>
+        <div class="column is-2"><p class="minihead">Total Size</p>${prettyBytes(Number(coll.size || 0))}</div>
+    `;
   }
 
   renderSummaryView() {
     const coll = this.coll;
 
     return html`
-    <div class="columns">
-      <div class="column col-title is-4">
+        <div class="columns">
+            <div class="column col-title is-4">
         <span class="subtitle has-text-weight-bold">
           <a href="?source=${encodeURIComponent(coll.sourceUrl)}">${coll.title || coll.filename}</a>
         </span>
-      </div>
-      ${this.renderSource(coll)}
-    </div>`;
+            </div>
+            ${this.renderSource(coll)}
+        </div>`;
   }
 
   renderDetailed() {
@@ -446,55 +446,55 @@ class CollInfo extends LitElement
     const certFingerprintUrl = certFingerprint ? `https://search.censys.io/certificates/${certFingerprint}` : "";
 
     return html`
-      <div class="columns">
-        <div class="column col-title is-4">
+        <div class="columns">
+            <div class="column col-title is-4">
           <span class="subtitle has-text-weight-bold">
             ${coll.title || coll.filename}
           </span>
-        </div>
-        ${coll.desc ? html`
-          <div class="column">
-            <p class="minihead">Description</p>
-            ${coll.desc}
-          </div>` : html`
-        `}
-        <div class="column"><p class="minihead">Filename</p>${coll.filename}</div>
-        ${this.renderSource(coll)}
+            </div>
+            ${coll.desc ? html`
+                <div class="column">
+                    <p class="minihead">Description</p>
+                    ${coll.desc}
+                </div>` : html`
+            `}
+            <div class="column"><p class="minihead">Filename</p>${coll.filename}</div>
+            ${this.renderSource(coll)}
 
-        ${domain ? html`
-        <div class="column">
-          <p class="minihead">Observed By</p>
-          <p>${domain}</p>
-          ${certFingerprintUrl ? html`<span><a target="_blank" href="${certFingerprintUrl}">View Certificate</a></span>` : ""}
-        </div>
-        ` : software ? html`
-        <div class="column">
-          <p class="minihead">Created With</p>
-          ${software || "Unknown"}
-        </div>
-        ` : ""}
+            ${domain ? html`
+                <div class="column">
+                    <p class="minihead">Observed By</p>
+                    <p>${domain}</p>
+                    ${certFingerprintUrl ? html`<span><a target="_blank" href="${certFingerprintUrl}">View Certificate</a></span>` : ""}
+                </div>
+            ` : software ? html`
+                <div class="column">
+                    <p class="minihead">Created With</p>
+                    ${software || "Unknown"}
+                </div>
+            ` : ""}
 
-        <div class="column">
-          <p class="minihead">Validation</p>
-          ${numValid > 0 || numInvalid > 0 ? html`
-          <p>${numValid} hashes verified${numInvalid ? html`, ${numInvalid} invalid` : ""}</p>` : html`
-          Not Available`}
-        </div>
+            <div class="column">
+                <p class="minihead">Validation</p>
+                ${numValid > 0 || numInvalid > 0 ? html`
+                    <p>${numValid} hashes verified${numInvalid ? html`, ${numInvalid} invalid` : ""}</p>` : html`
+                    Not Available`}
+            </div>
 
-        <div class="column">
-          <p class="minihead">Package Hash</p>
-        ${datapackageHash || "Not Available"}
-        </div>
+            <div class="column">
+                <p class="minihead">Package Hash</p>
+                ${datapackageHash || "Not Available"}
+            </div>
 
-        <div class="column">
-          <p class="minihead">Loading Mode</p>
-          ${coll.onDemand ? "Download On-Demand" : "Fully Local"}
-        </div>
-        <div class="column">
-          <p class="minihead">Collection id</p>
-          ${coll.coll}
-        </div>
-      </div>`;
+            <div class="column">
+                <p class="minihead">Loading Mode</p>
+                ${coll.onDemand ? "Download On-Demand" : "Fully Local"}
+            </div>
+            <div class="column">
+                <p class="minihead">Collection id</p>
+                ${coll.coll}
+            </div>
+        </div>`;
   }
 
   render() {

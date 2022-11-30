@@ -3,10 +3,6 @@ import { wrapCss } from "./misc";
 
 import fasSortDown from "@fortawesome/fontawesome-free/svgs/solid/sort-down.svg";
 import fasSortUp from "@fortawesome/fontawesome-free/svgs/solid/sort-up.svg";
-import { RangepickerComponent } from "./react-components/Rangepicker.component.jsx";
-import * as ReactDOMClient from "react-dom/client";
-
-import React from "react";
 
 // ===========================================================================
 class Sorter extends LitElement
@@ -23,7 +19,6 @@ class Sorter extends LitElement
     this.sortKey = null;
     this.sortDesc = null;
 
-    this.filtersObj = {};
   }
 
   static get properties() {
@@ -52,25 +47,6 @@ class Sorter extends LitElement
       }
     }
 
-    const root = ReactDOMClient.createRoot(this.shadowRoot.getElementById("rangepicker"));
-
-    let self = this;
-
-    const datesChanged = function (dates) {
-
-      let datesObj = {};
-      if (dates && dates[0]) {
-        datesObj.startDate = dates[0].unix()*1000;
-      }
-      if (dates && dates[1]) {
-        datesObj.endDate = dates[1].unix()*1000;
-      }
-
-      self.filterData(datesObj);
-
-    };
-
-    root.render(<RangepickerComponent datesChanged={datesChanged} />);
   }
 
   updated(changedProperties) {
@@ -89,22 +65,6 @@ class Sorter extends LitElement
     if (keyChanged || descChanged || dataChanged) {
       this.sortData();
     }
-    // console.log()
-  }
-
-  filterData(filterObj){
-    this.sortedData = [...this.data];
-    this.numResults = this.pageResults;
-
-    if (filterObj.startDate && filterObj.endDate) {
-      this.sortedData = this.sortedData.filter(data => data.ts >= filterObj.startDate && data.ts <= filterObj.endDate);
-    } else if (filterObj.startDate) {
-      this.sortedData = this.sortedData.filter(data => data.ts >= filterObj.startDate);
-    } else if (filterObj.endDate) {
-      this.sortedData = this.sortedData.filter(data => data.ts <= filterObj.endDate);
-    }
-
-    this.sendSortChanged();
   }
 
   sortData() {
@@ -121,7 +81,7 @@ class Sorter extends LitElement
           return 0;
         }
 
-        return (this.sortDesc == (first[this.sortKey] < second[this.sortKey])) ? 1 : -1;
+        return (this.sortDesc === (first[this.sortKey] < second[this.sortKey])) ? 1 : -1;
       });
     }
 
@@ -161,22 +121,20 @@ class Sorter extends LitElement
 
   render() {
     return html`
-        <div id="rangepicker"></div>
-        <div style="margin-top: 10px">
-            <div class="select is-small">
-                <select id="sort-select" @change=${(e) => this.sortKey = e.currentTarget.value}>
-                    ${this.sortKeys.map((sort) => html`
-                        <option value="${sort.key}" ?selected="${sort.key === this.sortKey}">Sort By: ${sort.name}
-                        </option>
-                    `)}
-                </select>
-            </div>
-            <button @click=${() => this.sortDesc = !this.sortDesc} class="button is-small">
-                <span>Order:</span>
-                <span class="is-sr-only">${this.sortDesc ? "Ascending" : "Descending"}</span>
-                <span class="icon"><fa-icon aria-hidden="true" .svg=${this.sortDesc ? fasSortUp : fasSortDown}></span>
-            </button>
-        </div>`;
+        <div class="select is-small">
+            <select id="sort-select" @change=${(e) => this.sortKey = e.currentTarget.value}>
+                ${this.sortKeys.map((sort) => html`
+                    <option value="${sort.key}" ?selected="${sort.key === this.sortKey}">Sort By: ${sort.name}
+                    </option>
+                `)}
+            </select>
+        </div>
+        <button @click=${() => this.sortDesc = !this.sortDesc} class="button is-small">
+            <span>Order:</span>
+            <span class="is-sr-only">${this.sortDesc ? "Ascending" : "Descending"}</span>
+            <span class="icon"><fa-icon aria-hidden="true" .svg=${this.sortDesc ? fasSortUp : fasSortDown}></span>
+        </button>
+    `;
   }
 }
 
